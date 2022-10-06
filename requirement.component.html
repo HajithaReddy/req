@@ -1,0 +1,154 @@
+<div class="container my-4">
+  <div *ngIf="listView">
+    <h2>Requirement List</h2>
+    <div class="button p-2 d-flex justify-content-end">
+      <button class="btn btn-primary" type="submit" (click)="req_ad()">Add Requirement</button>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Requirement Name</th>
+          <th scope="col">Position</th>
+          <th scope="col">Cities</th>
+          <th scope="col">Hiring Manager</th>
+          <th scope="col">Talent Acquisition</th>
+          <th scope="col">Ego</th>
+          <th scope="col">Experience-min</th>
+          <th scope="col">Experience-max</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let country of userData;index as i">
+          <th scope="row">{{i + 1}}</th>
+          <td>{{ country.reqName }}</td>
+          <td>
+            {{ country.position }}
+          </td>
+          <td>
+            {{ country.location }}
+          </td>
+          <td>
+            {{country.hmanager}}
+          </td>
+          <td>
+            {{country.tal}}
+          </td>
+          <td>
+            {{country.ego}}
+          </td>
+          <td>
+            {{ country.experience_min }}
+          </td>
+          <td>
+            {{ country.experience_max }}
+          </td>
+          <td>
+            <mat-icon (click)="onEdit(i, country)">edit</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="reqadd">
+    <h2>Add Requirement</h2>
+    <form class="row g-3" [formGroup]="reqForm" #form="ngForm" (ngSubmit)="onSubmit()">
+      <div class="col-md-6">
+        <label for="reqName" class="form-label">Requirement Name</label>
+        <input type="text" class="form-control" formControlName="reqName" id="reqName" name="reqName" required
+          [class.is-invalid]="reqName.invalid && (reqName.dirty || reqName.touched)">
+        <div *ngIf="reqName.invalid && (reqName.dirty || reqName.touched)" class="invalid-feedback">
+          <div *ngIf="reqName.errors?.['required']">
+            Requirement name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="inputPosition" class="form-label">No. of Position</label>
+        <input type="text" class="form-control" id="inputPosition" formControlName="position"
+          [class.is-invalid]="position.invalid && (position.dirty || position.touched)" required>
+        <div *ngIf="position.invalid && (position.dirty || position.touched)" class="invalid-feedback">
+          <div *ngIf="position.errors?.['required']">
+            Position is required.
+          </div>
+        </div>
+      </div>
+ 
+      <div class="col-md-6">
+        <label for="selectCity" class="form-label">Location</label>
+        <select id="inputCity" class="form-select" formControlName="location"
+          [class.is-invalid]="location.invalid && (location.dirty || location.touched)" required>
+          <option value="">Select an option</option>
+         <option *ngFor="let city of Cities" [ngValue]="city">
+          {{city}}
+          </option>
+        </select> 
+        <div *ngIf="location.invalid && (location.dirty || location.touched)" class="invalid-feedback">
+          <div *ngIf="location.errors?.['required']">
+            location is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="selectHiringManager" class="form-label">Hiring Manager</label>
+        
+        <ng-multiselect-dropdown [placeholder]="'Please Select Hiring Manager'" [settings]="dropdownSettings"
+          [data]="hrdropdownList" (onSelect)="onItemSelect($event)"
+          (onSelectAll)="onSelectAll($event)" id="selectHiringManager" name="hiringManager" formControlName="hmanager">
+          </ng-multiselect-dropdown>
+        
+                </div>
+
+      <div class="col-md-6">
+        <label for="inputTA" class="form-label">Talent Acquisition</label>
+        <ng-multiselect-dropdown [placeholder]="'Please Select Talent Acquisition '" [settings]="dropdownSettings"
+          [data]="tadropdownList"  (onSelect)="onItemSelect($event)"
+          (onSelectAll)="onSelectAll($event)" id="inputTA" name="talentAcquisition" formControlName="tal">
+        </ng-multiselect-dropdown>
+      </div>
+
+      <div class="col-md-6">
+        <label for="inputEGO" class="form-label">EGO</label>
+        <ng-multiselect-dropdown [placeholder]="'Please Select EGO'" [settings]="dropdownSettings"
+          [data]="egodropdownList"  (onSelect)="onItemSelect($event)"
+          (onSelectAll)="onSelectAll($event)" id="inputEGO" name="ego" formControlName="ego">
+         
+        </ng-multiselect-dropdown> 
+        
+      </div>
+
+      <div class="col-md-6">
+        <label for="inputExp" class="form-label">min-max(Experience)</label>
+        <div class="row">
+          <div class="col-md-3">
+            <input type="number" class="form-control" formControlName="experience_min" id="experience_min" name="experience_min" required
+            [class.is-invalid]="experience_min.invalid && (experience_min.dirty || experience_min.touched)">
+          <div *ngIf="experience_min.invalid && (experience_min.dirty || experience_min.touched)" class="invalid-feedback">
+            <div *ngIf="experience_min.errors?.['required']">
+              Experience is required.
+          </div>
+        </div>
+       </div>
+         <div class="col-md-3">
+        <input type="number" class="form-control" formControlName="experience_max" id="experience_max" name="experience_max" required
+        [class.is-invalid]="experience_max.invalid && (experience_max.dirty || experience_max.touched)">
+      <div *ngIf="experience_max.invalid && (experience_max.dirty || experience_max.touched)" class="invalid-feedback">
+        <div *ngIf="experience_max.errors?.['required']">
+          Experience is required.
+      </div>
+    </div>
+   </div>
+     </div>
+     </div>
+        <div class="button p-2 ">
+          <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary" [disabled]="reqForm.invalid">Submit</button>&nbsp;
+        <button class="btn btn-primary" type="submit" (click)="back()">Back</button>
+      </div>
+      </div>
+    </form>
+  </div>
+  </div>
